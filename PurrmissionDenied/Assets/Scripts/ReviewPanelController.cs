@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,11 +19,23 @@ public class ReviewPanelController : Subscriber
     public Button NextButton;
     public Image CorrectnessImage;
     public Text CorrectnessText;
+    public Animator StreakImage;
+    public Text PointText;
+    public Image AvatarImage;
+    public Text BioText;
+    public RectTransform UserMessages;
+    public Text AppealText;
+
+    public GameObject RulesScrollView;
+    public GameObject AppealScrollView;
 
     [Header("Resources")]
+    public GameObject MessageContainer;
     public SpriteList Avatars;
+    public Sprite DefaultAvatar;
     public Sprite CorrectSprite;
     public Sprite IncorrectSprite;
+    public Audio ScrollAudio;
 
     [Header("Event Listeners")]
     public SolidifiedGameEvent RecordsSolidified;
@@ -84,15 +97,82 @@ public class ReviewPanelController : Subscriber
         PrevButton.interactable = record.Index != 0;
         NextButton.interactable = record.Index != recordCount - 1;
 
+        BioText.text = record.User.bio;
+
+        if (Avatars != null)
+        {
+            if (Avatars.Sprites.Count > record.User.image_index)
+            {
+                AvatarImage.sprite = Avatars.Sprites[record.User.image_index];
+            }
+            else if (DefaultAvatar != null)
+            {
+                AvatarImage.sprite = DefaultAvatar;
+            }
+            else if (Avatars.Sprites.Count > 0)
+            {
+                AvatarImage.sprite = Avatars.Sprites[0];
+            }
+        }
+        else if (DefaultAvatar != null)
+        {
+            AvatarImage.sprite = DefaultAvatar;
+        }
+
+        foreach (Transform child in UserMessages.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (string msg in record.User.messages)
+        {
+            GameObject instantiatedObject = Instantiate(MessageContainer, UserMessages);
+            TextMeshProUGUI textComponent =
+                instantiatedObject.GetComponentInChildren<TextMeshProUGUI>();
+            textComponent.text = msg;
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(UserMessages);
+        }
+
+        AppealText.text = record.User.appeal_message;
+
         if (record.Correct)
         {
             CorrectnessImage.sprite = CorrectSprite;
-            CorrectnessText.text = "<color=#070>Correct</color>";
+            CorrectnessText.text = $"<color=#070>{record.Choice} Correctly</color>";
+            if (record.Streak > 2)
+            {
+                PointText.text =
+                    $"<color=#070>   x{record.Streak} Streak   {record.Score} points</color>";
+                StreakImage.gameObject.SetActive(true);
+                switch (record.Streak)
+                {
+                    case 3:
+                        StreakImage.SetTrigger("Red");
+                        break;
+                    case 4:
+                        StreakImage.SetTrigger("Orange");
+                        break;
+                    default:
+                        StreakImage.SetTrigger("Blue");
+                        break;
+                }
+            }
+            else
+            {
+                PointText.text =
+                    $"<color=#070>x{record.Streak} Streak   {record.Score} points</color>";
+                StreakImage.SetTrigger("Red");
+                StreakImage.gameObject.SetActive(false);
+            }
         }
         else
         {
             CorrectnessImage.sprite = IncorrectSprite;
-            CorrectnessText.text = "<color=#700>Incorrect</color>";
+            CorrectnessText.text = $"<color=#700>{record.Choice} Incorrectly</color>";
+            StreakImage.SetTrigger("Red");
+            StreakImage.gameObject.SetActive(false);
+            PointText.text = $"<color=#700>{record.MistakesText}</color>";
         }
     }
 
@@ -107,6 +187,9 @@ public class ReviewPanelController : Subscriber
             SimulateButton(CloseButton, KeyCode.Return, KeyCode.KeypadEnter);
             SimulateButton(NextButton, KeyCode.RightArrow);
             SimulateButton(PrevButton, KeyCode.LeftArrow);
+
+            SimulateScrolling(RulesScrollView, KeyCode.W, KeyCode.S);
+            SimulateScrolling(AppealScrollView, KeyCode.UpArrow, KeyCode.DownArrow);
         }
     }
 
@@ -119,6 +202,19 @@ public class ReviewPanelController : Subscriber
         )
         {
             StartCoroutine(SimulateButtonPress(btn));
+        }
+    }
+
+    private const float SCROLL_PER_SECOND = 10.0f;
+
+    void SimulateScrolling(GameObject scrollview, KeyCode up, KeyCode down)
+    {
+        if (scrollview.gameObject.activeSelf)
+        {
+            if (Input.GetKey(up))
+                SimulateScrollEvent(scrollview, Time.deltaTime * SCROLL_PER_SECOND);
+            else if (Input.GetKey(down))
+                SimulateScrollEvent(scrollview, -Time.deltaTime * SCROLL_PER_SECOND);
         }
     }
 
@@ -149,5 +245,26 @@ public class ReviewPanelController : Subscriber
         // Release and invoke the click
         ExecuteEvents.Execute(btn.gameObject, ped, ExecuteEvents.pointerUpHandler);
         btn.onClick.Invoke();
+    }
+
+    private void SimulateScrollEvent(GameObject scrollview, float delta)
+    {
+        if (scrollview == null)
+            return;
+
+        // Ensure there’s an EventSystem (if the scene doesn’t already have one)
+        if (EventSystem.current == null)
+        {
+            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        }
+
+        // Create a fake pointer event to simulate a scroll event
+        var data = new PointerEventData(EventSystem.current)
+        {
+            scrollDelta = new Vector2(0, delta),
+        };
+
+        // Trigger the button's "pressed" visual state
+        ExecuteEvents.Execute(scrollview.gameObject, data, ExecuteEvents.scrollHandler);
     }
 }

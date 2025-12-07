@@ -7,8 +7,8 @@ public class RecordKeeper : Subscriber
 {
     public enum AppealChoice
     {
-        Approve,
-        Deny,
+        Approved,
+        Denied,
     }
 
     public struct AppealRecord
@@ -123,11 +123,11 @@ public class RecordKeeper : Subscriber
     {
         if (approve)
         {
-            choices.Add(AppealChoice.Approve);
+            choices.Add(AppealChoice.Approved);
         }
         else
         {
-            choices.Add(AppealChoice.Deny);
+            choices.Add(AppealChoice.Denied);
         }
     }
 
