@@ -14,9 +14,15 @@ public class ReviewPanelController : Subscriber
     public Text RulesText;
     public Text TotalAppealsText;
     public Text CurrentAppealText;
+    public Button PrevButton;
+    public Button NextButton;
+    public Image CorrectnessImage;
+    public Text CorrectnessText;
 
     [Header("Resources")]
     public SpriteList Avatars;
+    public Sprite CorrectSprite;
+    public Sprite IncorrectSprite;
 
     [Header("Event Listeners")]
     public SolidifiedGameEvent RecordsSolidified;
@@ -25,6 +31,9 @@ public class ReviewPanelController : Subscriber
     [Header("Events")]
     public IntGameEvent LoadRecord;
     public BoolGameEvent ReviewPanelActive;
+
+    private int currentRecord = 0;
+    private int recordCount = 0;
 
     private bool visible = false;
 
@@ -44,16 +53,47 @@ public class ReviewPanelController : Subscriber
         ReviewPanelActive?.Emit(state);
     }
 
+    public void PrevRecord()
+    {
+        if (currentRecord > 0 && recordCount > 0)
+        {
+            LoadRecord?.Emit(--currentRecord);
+        }
+    }
+
+    public void NextRecord()
+    {
+        if (currentRecord < (recordCount - 1) && recordCount > 0)
+        {
+            LoadRecord?.Emit(++currentRecord);
+        }
+    }
+
     private void OnRecordsSolidified(RecordKeeper.Solidified data)
     {
         RulesText.text = data.RuleText;
+        recordCount = data.RecordCount;
         TotalAppealsText.text = $"/ {data.RecordCount}";
-        LoadRecord?.Emit(0);
+        if (recordCount > 0)
+            LoadRecord?.Emit(0);
     }
 
     private void OnRecordLoaded(RecordKeeper.AppealRecord record)
     {
         CurrentAppealText.text = $"{record.Index + 1} ";
+        PrevButton.interactable = record.Index != 0;
+        NextButton.interactable = record.Index != recordCount - 1;
+
+        if (record.Correct)
+        {
+            CorrectnessImage.sprite = CorrectSprite;
+            CorrectnessText.text = "<color=#070>Correct</color>";
+        }
+        else
+        {
+            CorrectnessImage.sprite = IncorrectSprite;
+            CorrectnessText.text = "<color=#700>Incorrect</color>";
+        }
     }
 
     void Update()
@@ -61,26 +101,12 @@ public class ReviewPanelController : Subscriber
         if (!visible)
         {
             SimulateButton(ReviewButton, KeyCode.R);
-            // if (
-            //     ReviewButton.gameObject.activeSelf
-            //     && ReviewButton.interactable
-            //     && Input.GetKeyDown(KeyCode.R)
-            // )
-            // {
-            //     StartCoroutine(SimulateButtonPress(ReviewButton));
-            // }
         }
         else
         {
             SimulateButton(CloseButton, KeyCode.Return, KeyCode.KeypadEnter);
-            // if (
-            //     CloseButton.gameObject.activeSelf
-            //     && CloseButton.interactable
-            //     && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-            // )
-            // {
-            //     StartCoroutine(SimulateButtonPress(CloseButton));
-            // }
+            SimulateButton(NextButton, KeyCode.RightArrow);
+            SimulateButton(PrevButton, KeyCode.LeftArrow);
         }
     }
 
