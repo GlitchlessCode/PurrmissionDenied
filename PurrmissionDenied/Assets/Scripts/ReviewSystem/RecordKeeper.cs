@@ -200,16 +200,18 @@ public class RecordKeeper : Subscriber
             );
         }
 
-        RecordsSolidified?.Emit(new Solidified(records.Count, ruleText));
         solid = true;
         Debug.Log($"Solidified with {records.Count} records");
+        RecordsSolidified?.Emit(new Solidified(records.Count, ruleText));
         Reset();
     }
 
     private void OnRequestRecord(int recordIdx)
     {
+        Debug.Log("Got request");
         if ((!solid) || (recordIdx >= records.Count))
             return;
+        Debug.Log($"Found {recordIdx}");
 
         FoundRecord?.Emit(records[recordIdx]);
     }

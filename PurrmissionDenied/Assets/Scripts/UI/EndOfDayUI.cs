@@ -33,6 +33,9 @@ public class EndOfDayUI : Subscriber
     private Button nextButton;
 
     [SerializeField]
+    private Button reviewButton;
+
+    [SerializeField]
     private Animator powerOnPanel;
 
     [Header("Audio")]
@@ -43,6 +46,7 @@ public class EndOfDayUI : Subscriber
 
     [Header("Event Listeners")]
     public DaySummaryGameEvent DisplayDaySummary;
+    public BoolGameEvent ReviewPanelActive;
 
     [Header("Events")]
     public UnitGameEvent RequestDaySummary;
@@ -69,14 +73,23 @@ public class EndOfDayUI : Subscriber
             totalScoreTextTitle.text = "";
 
         DisplayDaySummary?.Subscribe(OnDisplayDaySummary);
+        ReviewPanelActive?.Subscribe(OnReviewPanelActive);
+
         powerOnPanel.gameObject.SetActive(true);
         if (nextButton)
             nextButton.gameObject.SetActive(false);
+        if (reviewButton)
+            reviewButton.gameObject.SetActive(false);
     }
 
     public override void AfterSubscribe()
     {
         RequestDaySummary?.Emit();
+    }
+
+    private void OnReviewPanelActive(bool state)
+    {
+        nextButton.interactable = !state;
     }
 
     private void OnDisplayDaySummary((DaySummary, int, bool, int) summaryTuple)
@@ -132,6 +145,13 @@ public class EndOfDayUI : Subscriber
         yield return new WaitForSeconds(0.3f);
         yield return TallyValue(totalScoreText, totalScore, 37);
         yield return new WaitForSeconds(1.0f);
+        if (reviewButton)
+            reviewButton.gameObject.SetActive(true);
+        if (PlaceAudio.clip != null)
+        {
+            AudioBus?.Emit(PlaceAudio);
+        }
+        yield return new WaitForSeconds(0.2f);
         if (nextButton)
             nextButton.gameObject.SetActive(true);
         if (ButtonPlaceAudio.clip != null)
@@ -235,5 +255,7 @@ public class EndOfDayUI : Subscriber
         // Release and invoke the click
         ExecuteEvents.Execute(btn.gameObject, ped, ExecuteEvents.pointerUpHandler);
         btn.onClick.Invoke();
+
+        btn.interactable = false;
     }
 }
