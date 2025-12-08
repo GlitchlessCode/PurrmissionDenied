@@ -18,6 +18,10 @@ public class PersistanceClear : MonoBehaviour
         {
             Destroy(records.gameObject);
         }
+        foreach (DirectMessageManager manager in FindObjectsOfType<DirectMessageManager>())
+        {
+            Destroy(manager.gameObject);
+        }
         Destroy(gameObject);
     }
 }

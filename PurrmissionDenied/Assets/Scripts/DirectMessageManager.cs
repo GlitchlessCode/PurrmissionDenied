@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -79,72 +80,99 @@ public class DirectMessageManager : Subscriber
         new Queue<(MessageType, DirectMessage)>();
     private bool isRunningQueue = false;
 
+    private bool setup = false;
+
     public override void Subscribe()
     {
-        AfterAppeal?.Subscribe(OnAfterAppealQueued);
-        AsyncComplete?.Subscribe(OnAsyncComplete);
+        state = FeedbackState.NoFeedback;
+        appealCount = 0;
+        correctAppealCount = 0;
 
-        queuedAppeals = new Queue<bool>();
-        StartCoroutine(
-            StartingGoodMessages.GetMessages(
-                (messages) =>
-                {
-                    startingGoodMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
-        StartCoroutine(
-            StartingBadMessages.GetMessages(
-                (messages) =>
-                {
-                    startingBadMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
-        StartCoroutine(
-            StayingGoodMessages.GetMessages(
-                (messages) =>
-                {
-                    stayingGoodMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
-        StartCoroutine(
-            StayingBadMessages.GetMessages(
-                (messages) =>
-                {
-                    stayingBadMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
-        StartCoroutine(
-            GettingGoodMessages.GetMessages(
-                (messages) =>
-                {
-                    gettingGoodMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
-        StartCoroutine(
-            GettingBadMessages.GetMessages(
-                (messages) =>
-                {
-                    gettingBadMessages = new InternalDirectMessagePool(messages);
-                    loadedPools++;
-                    catchUpAppeals();
-                }
-            )
-        );
+        if (!setup)
+        {
+            int persisterCount = FindObjectsOfType<DirectMessageManager>().Count();
+            if (persisterCount > 1)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            else
+            {
+                DontDestroyOnLoad(gameObject);
+
+                AfterAppeal?.Subscribe(OnAfterAppealQueued);
+                AsyncComplete?.Subscribe(OnAsyncComplete);
+
+                queuedAppeals = new Queue<bool>();
+                StartCoroutine(
+                    StartingGoodMessages.GetMessages(
+                        (messages) =>
+                        {
+                            startingGoodMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+                StartCoroutine(
+                    StartingBadMessages.GetMessages(
+                        (messages) =>
+                        {
+                            startingBadMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+                StartCoroutine(
+                    StayingGoodMessages.GetMessages(
+                        (messages) =>
+                        {
+                            stayingGoodMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+                StartCoroutine(
+                    StayingBadMessages.GetMessages(
+                        (messages) =>
+                        {
+                            stayingBadMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+                StartCoroutine(
+                    GettingGoodMessages.GetMessages(
+                        (messages) =>
+                        {
+                            gettingGoodMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+                StartCoroutine(
+                    GettingBadMessages.GetMessages(
+                        (messages) =>
+                        {
+                            gettingBadMessages = new InternalDirectMessagePool(messages);
+                            loadedPools++;
+                            catchUpAppeals();
+                        }
+                    )
+                );
+
+                setup = true;
+            }
+        }
+        else
+        {
+            lastMessageType = MessageType.None;
+            AfterAppeal?.Subscribe(OnAfterAppeal);
+        }
 
         queuedSequences = new Dictionary<Guid, int>();
         messageSequences = new List<InternalDirectMessageSequence>();
