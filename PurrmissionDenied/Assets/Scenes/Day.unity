@@ -9047,7 +9047,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: de820b7a586cbd848a5b9412ba959ab8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5091fe8975cb88948a387eb3f81fd439, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9832,6 +9832,8 @@ MonoBehaviour:
   musicSliderText: {fileID: 1718533167}
   soundSliderText: {fileID: 2122949274}
   maxSliderAmount: 100
+  musicSlider: {fileID: 1669219244}
+  soundSlider: {fileID: 673353339}
   SoundSample:
     clip: {fileID: 8300000, guid: 44be13caa470762f9bdff29c60c54ee5, type: 3}
     volume: 0.8
@@ -9840,9 +9842,9 @@ MonoBehaviour:
     pitchOverride:
       active: 0
       value: 0
+  SoundSampleBus: {fileID: 11400000, guid: 7aa3e6f8e7ff8143aa03f78053e4c52f, type: 2}
   ChangeMusic: {fileID: 11400000, guid: 50ceba6f3c991b4deb83d07f7c4cc3ab, type: 2}
   ChangeSound: {fileID: 11400000, guid: bb9e88c84f39f8d5fb9cb238de2fac02, type: 2}
-  SoundSampleBus: {fileID: 11400000, guid: 7aa3e6f8e7ff8143aa03f78053e4c52f, type: 2}
 --- !u!114 &1987603602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10007,8 +10009,8 @@ MonoBehaviour:
   SettingsPanel: {fileID: 697209356}
   TabSwitch:
     clip: {fileID: 8300000, guid: 44be13caa470762f9bdff29c60c54ee5, type: 3}
-    volume: 1
-    pitchVariance: 0.3
+    volume: 0.8
+    pitchVariance: 0.2
     loop: 0
     pitchOverride:
       active: 0
