@@ -29,6 +29,8 @@ public class ReviewPanelController : Subscriber
     public GameObject RulesScrollView;
     public GameObject AppealScrollView;
 
+    public List<RectTransform> ContentBoxes;
+
     [Header("Resources")]
     public GameObject MessageContainer;
     public SpriteList Avatars;
@@ -61,6 +63,11 @@ public class ReviewPanelController : Subscriber
     {
         visible = state;
         ReviewPanelRoot?.SetActive(state);
+        Canvas.ForceUpdateCanvases();
+        foreach (RectTransform rect in ContentBoxes)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        }
         ReviewButton.interactable = !state;
         CloseButton.interactable = state;
         ReviewPanelActive?.Emit(state);
