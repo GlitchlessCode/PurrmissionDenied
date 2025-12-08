@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,8 +8,15 @@ using UnityEngine.UI;
 
 public class TitleScreenUI : MonoBehaviour
 {
+    private float time;
+
+    [SerializeField]
+    public float radius = 15;
+    public float loopTime = 4;
+
     [Header("Panels")]
     public GameObject PowerOff;
+    public GameObject Title;
 
     [Header("Buttons")]
     public Button StartButton;
@@ -24,6 +32,14 @@ public class TitleScreenUI : MonoBehaviour
     {
         PowerOff.SetActive(false);
         StartButton.onClick.AddListener(OnStartButton);
+    }
+
+    private void TitleAnimation()
+    {
+        double angle = time % loopTime / loopTime * 2 * Math.PI;
+        double x = Math.Cos(angle) * radius;
+        double y = Math.Sin(angle) * radius;
+        Title.transform.localPosition = new Vector2((float)x, (float)y);
     }
 
     private void OnStartButton()
@@ -51,6 +67,13 @@ public class TitleScreenUI : MonoBehaviour
                 // Visually simulate the button press
                 StartCoroutine(SimulateButtonPress());
             }
+        }
+
+        TitleAnimation();
+        time += 1 * Time.deltaTime;
+        if (time >= 4)
+        {
+            time = 0;
         }
     }
 
