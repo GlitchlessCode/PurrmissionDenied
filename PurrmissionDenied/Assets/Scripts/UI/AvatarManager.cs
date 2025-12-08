@@ -7,7 +7,8 @@ public class AvatarManager : Subscriber
 {
     public Image AvatarElement;
 
-    public List<Sprite> Sprites;
+    public Sprite DefaultAvatar;
+    public SpriteList Avatars;
 
     [Header("Event Listeners")]
     public UserEntryGameEvent UserLoaded;
@@ -19,13 +20,30 @@ public class AvatarManager : Subscriber
 
     void OnUserLoaded(UserEntry user)
     {
-        if (Sprites.Count > user.image_index)
+        if (user.messages.Length == 0 && user.image_index == 0 && DefaultAvatar != null)
         {
-            AvatarElement.sprite = Sprites[user.image_index];
+            AvatarElement.sprite = DefaultAvatar;
+            return;
         }
-        else if (Sprites.Count > 0)
+
+        if (Avatars != null)
         {
-            AvatarElement.sprite = Sprites[0];
+            if (Avatars.Sprites.Count > user.image_index)
+            {
+                AvatarElement.sprite = Avatars.Sprites[user.image_index];
+            }
+            else if (DefaultAvatar != null)
+            {
+                AvatarElement.sprite = DefaultAvatar;
+            }
+            else if (Avatars.Sprites.Count > 0)
+            {
+                AvatarElement.sprite = Avatars.Sprites[0];
+            }
+        }
+        else if (DefaultAvatar != null)
+        {
+            AvatarElement.sprite = DefaultAvatar;
         }
     }
 }

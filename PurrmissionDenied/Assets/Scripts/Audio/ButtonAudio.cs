@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ButtonAudio : MonoBehaviour
 {
@@ -13,8 +14,15 @@ public class ButtonAudio : MonoBehaviour
     [Header("Events")]
     public AudioGameEvent AudioBus;
 
+    private Button SelfButton;
+
     void Awake()
     {
+        gameObject.TryGetComponent(out Button btn);
+        if (btn != null)
+        {
+            SelfButton = btn;
+        }
         gameObject.TryGetComponent(out EventTrigger trigger);
         if (trigger == null)
         {
@@ -48,12 +56,28 @@ public class ButtonAudio : MonoBehaviour
 
     private void OnClickStart(PointerEventData _)
     {
-        AudioBus?.Emit(ClickRelease);
+        if (SelfButton != null)
+        {
+            if (SelfButton.interactable)
+                AudioBus?.Emit(ClickRelease);
+        }
+        else
+        {
+            AudioBus?.Emit(ClickRelease);
+        }
     }
 
     private void OnClickRelease(PointerEventData _)
     {
-        AudioBus?.Emit(ClickStart);
+        if (SelfButton != null)
+        {
+            if (SelfButton.interactable)
+                AudioBus?.Emit(ClickStart);
+        }
+        else
+        {
+            AudioBus?.Emit(ClickStart);
+        }
     }
 
     private EventTrigger.Entry createEntry(EventTriggerType kind, Action<PointerEventData> callback)

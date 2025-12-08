@@ -14,6 +14,10 @@ public class PersistanceClear : MonoBehaviour
         {
             Destroy(manager.gameObject);
         }
+        foreach (RecordKeeper records in FindObjectsOfType<RecordKeeper>())
+        {
+            Destroy(records.gameObject);
+        }
         Destroy(gameObject);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [System.Serializable]
-public struct UserEntry
+public struct UserEntry : IEquatable<UserEntry>
 {
     public string name;
     public string date;
@@ -14,6 +14,21 @@ public struct UserEntry
     public int image_index;
     public string[] messages;
     public string appeal_message;
+
+    public bool Equals(UserEntry other)
+    {
+        if (image_index != other.image_index)
+            return false;
+        if (name != other.name)
+            return false;
+        if (date != other.date)
+            return false;
+        if (bio != other.bio)
+            return false;
+        if (appeal_message != other.appeal_message)
+            return false;
+        return true;
+    }
 }
 
 [System.Serializable]

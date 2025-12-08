@@ -92,7 +92,6 @@ public class ScoreManager : Subscriber
         {
             DaySummary current = currentDay.Value;
             int score = ComputeScore(correct);
-            Debug.Log($"Active Streak: {activeStreak}, Score Earned: {score}");
             current.Scores.Add(score);
 
             current.completedAppeals += 1;
