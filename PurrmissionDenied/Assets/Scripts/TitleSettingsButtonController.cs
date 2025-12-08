@@ -4,14 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SettingsButtonController : Subscriber
+public class TitleSettingsButtonController : Subscriber
 {
     [Header("Buttons")]
     public Button SettingsOpenButton;
     public Button SettingsCloseButton;
-
-    [Header("Button Animator")]
-    public Animator SettingButtonAnimator;
 
     [Header("Panel")]
     public GameObject SettingsPanel;
@@ -21,7 +18,6 @@ public class SettingsButtonController : Subscriber
 
     [Header("Event Listeners")]
     public AudioGameEvent AudioBus;
-    public DayDefinitionGameEvent Day;
     private bool canUpdate = true;
 
     void Start()
@@ -33,33 +29,16 @@ public class SettingsButtonController : Subscriber
         SetupHoverOnlyButton(SettingsCloseButton);
     }
 
-    public override void Subscribe()
-    {
-        Day?.Subscribe(OnDay);
-    }
-
-    private void OnDay(DayDefinition dayDef)
-    {
-        if (dayDef.Index == 1)
-        {
-            // Run animation
-            Debug.Log("Flashing true");
-            SettingButtonAnimator.SetBool("IsFlashing", true);
-        }
-    }
-
     void OnSettingsOpen()
     {
         SettingsPanel.SetActive(true);
         AudioBus?.Emit(TabSwitch);
-        SettingButtonAnimator.SetBool("IsFlashing", false);
     }
 
     void OnSettingsClosed()
     {
         SettingsPanel.SetActive(false);
         AudioBus?.Emit(TabSwitch);
-        SettingButtonAnimator.ResetTrigger("PlayPressed");
         CursorManager.Instance.Default();
     }
 
@@ -67,7 +46,6 @@ public class SettingsButtonController : Subscriber
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            SettingButtonAnimator.SetTrigger("PlayFullPress");
             if (canUpdate && !SettingsPanel.activeSelf)
             {
                 OnSettingsOpen();
@@ -98,15 +76,6 @@ public class SettingsButtonController : Subscriber
         CursorManager.Instance.Default();
     }
 
-    public void OnButtonRelease()
-    {
-        if (SettingButtonAnimator.GetCurrentAnimatorStateInfo(0).IsName("ButtonPressed"))
-        {
-            SettingButtonAnimator.SetTrigger("PlayReleased");
-            SettingButtonAnimator.ResetTrigger("PlayPressed");
-        }
-    }
-
     private void OnButtonClick(Animator animator)
     {
         animator.ResetTrigger("PlayReset");
@@ -133,13 +102,6 @@ public class SettingsButtonController : Subscriber
 
         trigger.triggers.Add(createEntry(EventTriggerType.PointerEnter, OnHover));
         trigger.triggers.Add(createEntry(EventTriggerType.PointerExit, OnPointerExit));
-
-        trigger.triggers.Add(
-            createEntry(EventTriggerType.PointerDown, (_) => OnButtonClick(SettingButtonAnimator))
-        );
-        trigger.triggers.Add(
-            createEntry(EventTriggerType.PointerExit, (_) => OnButtonReset(SettingButtonAnimator))
-        );
     }
 
     private void ToggleSettings()
