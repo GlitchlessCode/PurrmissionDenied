@@ -9860,6 +9860,7 @@ MonoBehaviour:
   scrollSpeed: 5
   content: {fileID: 1120158325}
   RulesText: {fileID: 1086780059}
+  SettingsPanel: {fileID: 697209356}
   Scroll:
     clip: {fileID: 8300000, guid: dcaf3f6a07d966e62bebe571ef05e51a, type: 3}
     volume: 0.6
@@ -9891,6 +9892,7 @@ MonoBehaviour:
   DenyButton: {fileID: 676759489}
   AppealPanel: {fileID: 1239063806}
   ScrollView: {fileID: 1384748377}
+  SettingsPanel: {fileID: 697209356}
   ChatLogText: {fileID: 1146844095}
   ChatScroll: {fileID: 0}
   textComponent: {fileID: 0}
@@ -9940,6 +9942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c1d915b33068545a7e20e73bb1be49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SettingsPanel: {fileID: 697209356}
   AudioBus: {fileID: 11400000, guid: 7aa3e6f8e7ff8143aa03f78053e4c52f, type: 2}
   DMSent: {fileID: 11400000, guid: 97ebe09952f655c42b984331ad049f6d, type: 2}
   DMTabClick: {fileID: 11400000, guid: 074e5403052471449b841afb3e4f8100, type: 2}
