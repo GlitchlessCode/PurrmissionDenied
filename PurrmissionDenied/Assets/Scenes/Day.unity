@@ -5176,8 +5176,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88012cee28410826b89b507104cc4574, type: 2}
   DayInit: {fileID: 11400000, guid: 9eae0ffb72c123fafb163a013cfeeaa3, type: 2}
   IncrementAndMove: {fileID: 11400000, guid: b718f5e84ba3778568aca0c251eb3c80, type: 2}
-  EnableOverride: 1
-  IndexOverride: 1
+  EnableOverride: 0
+  IndexOverride: 0
 --- !u!4 &1095382514
 Transform:
   m_ObjectHideFlags: 0
