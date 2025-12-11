@@ -19,6 +19,7 @@ public class TitleSettingsButtonController : Subscriber
     [Header("Event Listeners")]
     public AudioGameEvent AudioBus;
     private bool canUpdate = true;
+    private GameObject MusicSlider;
 
     void Start()
     {
@@ -27,12 +28,14 @@ public class TitleSettingsButtonController : Subscriber
 
         SetupAnimatedSettingsButton(SettingsOpenButton);
         SetupHoverOnlyButton(SettingsCloseButton);
+        MusicSlider = SettingsPanel.transform.Find("MusicSlider").gameObject;
     }
 
     void OnSettingsOpen()
     {
         SettingsPanel.SetActive(true);
         AudioBus?.Emit(TabSwitch);
+        EventSystem.current.SetSelectedGameObject(MusicSlider);
     }
 
     void OnSettingsClosed()

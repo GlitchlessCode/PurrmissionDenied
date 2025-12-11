@@ -17,6 +17,7 @@ public class AppealPanelController : Subscriber
     public Button DenyButton;
     public GameObject AppealPanel;
     public GameObject ScrollView;
+    public GameObject SettingsPanel;
 
     [Header("Chat")]
     public Text ChatLogText;
@@ -85,7 +86,7 @@ public class AppealPanelController : Subscriber
 
     void OnAppealPanelActive(bool isActive)
     {
-        if (isActive)
+        if (isActive && !SettingsPanel.activeSelf)
         {
             AcceptButton.enabled = true;
             DenyButton.enabled = true;
@@ -240,6 +241,18 @@ public class AppealPanelController : Subscriber
                 ResolveAppeal?.Emit(false);
                 StartCoroutine(DelayAction(DelayTime));
             }
+        }
+        if (SettingsPanel.activeSelf)
+        {
+            AcceptButton.enabled = false;
+            DenyButton.enabled = false;
+            scrollable = false;
+        }
+        else
+        {
+            AcceptButton.enabled = true;
+            DenyButton.enabled = true;
+            scrollable = true;
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(Panel.GetComponent<RectTransform>());
         scroll();

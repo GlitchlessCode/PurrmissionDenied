@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class DMSPanelController : Subscriber
 {
+    [Header("UI")]
+    public GameObject SettingsPanel;
+
     [Header("Events")]
     public AudioGameEvent AudioBus;
 
@@ -93,6 +96,15 @@ public class DMSPanelController : Subscriber
 
     void scroll()
     {
+        if (SettingsPanel.activeSelf)
+        {
+            scrollable = false;
+        }
+        else
+        {
+            scrollable = true;
+        }
+
         if ((Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) && scrollable)
         {
             content.anchoredPosition -= new Vector2(0, scrollSpeed);
