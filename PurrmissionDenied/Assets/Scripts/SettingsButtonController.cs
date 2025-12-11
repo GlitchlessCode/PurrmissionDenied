@@ -23,6 +23,7 @@ public class SettingsButtonController : Subscriber
     public AudioGameEvent AudioBus;
     public DayDefinitionGameEvent Day;
     private bool canUpdate = true;
+    private GameObject MusicSlider;
 
     void Start()
     {
@@ -31,6 +32,7 @@ public class SettingsButtonController : Subscriber
 
         SetupAnimatedSettingsButton(SettingsOpenButton);
         SetupHoverOnlyButton(SettingsCloseButton);
+        MusicSlider = SettingsPanel.transform.Find("MusicSlider").gameObject;
     }
 
     public override void Subscribe()
@@ -43,7 +45,6 @@ public class SettingsButtonController : Subscriber
         if (dayDef.Index == 1)
         {
             // Run animation
-            Debug.Log("Flashing true");
             SettingButtonAnimator.SetBool("IsFlashing", true);
         }
     }
@@ -52,6 +53,7 @@ public class SettingsButtonController : Subscriber
     {
         SettingsPanel.SetActive(true);
         AudioBus?.Emit(TabSwitch);
+        EventSystem.current.SetSelectedGameObject(MusicSlider);
         SettingButtonAnimator.SetBool("IsFlashing", false);
     }
 
