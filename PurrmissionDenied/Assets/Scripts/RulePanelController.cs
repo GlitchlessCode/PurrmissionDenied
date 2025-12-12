@@ -46,15 +46,6 @@ public class RulePanelController : Subscriber
             scrollable = true;
         }
 
-        // if (SettingsPanel.activeSelf)
-        // {
-        //     scrollable = false;
-        // }
-        // else if (RulePanel.activeSelf)
-        // {
-        //     scrollable = true;
-        // }
-
         if ((Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) && scrollable)
         {
             content.anchoredPosition -= new Vector2(0, scrollSpeed);
