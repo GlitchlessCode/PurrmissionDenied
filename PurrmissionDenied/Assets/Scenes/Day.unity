@@ -1433,7 +1433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 63.050003, y: 0}
+  m_AnchoredPosition: {x: 59.83164, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.28}
 --- !u!114 &191525344
@@ -1785,8 +1785,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'call me THEMOUSER... and catch me live DAILY at scritch.tv/themouser :3
 
-    business:
-    themouser@mousermedia.com
+    business: themouser@mousermedia.com
 
     paws UP! ^w^'
 --- !u!222 &213693905
@@ -4544,7 +4543,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 123.5, y: 0}
+  m_AnchoredPosition: {x: 118.6328, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &966684228
@@ -5177,7 +5176,7 @@ MonoBehaviour:
   DayInit: {fileID: 11400000, guid: 9eae0ffb72c123fafb163a013cfeeaa3, type: 2}
   IncrementAndMove: {fileID: 11400000, guid: b718f5e84ba3778568aca0c251eb3c80, type: 2}
   EnableOverride: 0
-  IndexOverride: 2
+  IndexOverride: 0
 --- !u!4 &1095382514
 Transform:
   m_ObjectHideFlags: 0
@@ -10458,7 +10457,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 55.850002, y: 0}
+  m_AnchoredPosition: {x: 53.97968, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.4}
 --- !u!114 &2086084006

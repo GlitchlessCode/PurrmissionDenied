@@ -1,4 +1,5 @@
 {
     "message": "*Sigh*",
-    "spriteIndex": 5
+    "spriteIndex": 5,
+    "fadeFromBlack":false
 }
