@@ -88,14 +88,14 @@ public class AppealPanelController : Subscriber
     {
         if (isActive && !SettingsPanel.activeSelf)
         {
-            AcceptButton.enabled = true;
-            DenyButton.enabled = true;
+            AcceptButton.gameObject.SetActive(true);
+            DenyButton.gameObject.SetActive(true);
             scrollable = true;
         }
         else
         {
-            AcceptButton.enabled = false;
-            DenyButton.enabled = false;
+            AcceptButton.gameObject.SetActive(false);
+            DenyButton.gameObject.SetActive(false);
             scrollable = false;
         }
     }
@@ -226,7 +226,7 @@ public class AppealPanelController : Subscriber
     {
         if (Input.GetKey(KeyCode.A))
         {
-            if (canUpdate == true && AcceptButton.enabled)
+            if (canUpdate == true && AcceptButton.enabled && AppealPanel.activeSelf)
             {
                 AcceptButton.GetComponent<Animator>().SetTrigger("PlayFullPress");
                 ResolveAppeal?.Emit(true);
@@ -235,7 +235,7 @@ public class AppealPanelController : Subscriber
         }
         if (Input.GetKey(KeyCode.D))
         {
-            if (canUpdate == true && DenyButton.enabled)
+            if (canUpdate == true && DenyButton.enabled && AppealPanel.activeSelf)
             {
                 DenyButton.GetComponent<Animator>().SetTrigger("PlayFullPress");
                 ResolveAppeal?.Emit(false);
