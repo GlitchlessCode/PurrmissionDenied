@@ -143,6 +143,9 @@ public class EndSceneDialogueManager : Subscriber
             StartCoroutine(PowerOnDelayed());
         }
 
+        if (playAgain)
+            playAgain.gameObject.SetActive(false);
+
         // Start loading our end-scene JSON via the existing async importer
         StartCoroutine(
             JSONImporter.ImportFiles<EndSceneLine>(
@@ -276,7 +279,10 @@ public class EndSceneDialogueManager : Subscriber
             if (credits != null)
                 credits.SetTrigger("FadeIn");
             if (playAgain != null)
+            {
+                playAgain.gameObject.SetActive(true);
                 playAgain.onClick.AddListener(PlayAgain);
+            }
             currentLineIndex++;
             return;
         }
