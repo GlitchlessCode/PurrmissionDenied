@@ -93,7 +93,7 @@ public class Day2Rules : IRuleset
         );
 
         validator.AddCondition(
-            "4. no full chat logs in ENTIRELY lowercase!",
+            "4. no FULL chat logs in ENTIRELY lowercase!",
             (currentUser) =>
             {
                 return !validator.messagesContain(currentUser, @"[A-Z]");
@@ -101,7 +101,7 @@ public class Day2Rules : IRuleset
         );
 
         validator.AddCondition(
-            "5. do NOT share personal information!",
+            "5. do NOT share personal information! (e.g. addresses, locations or ages NOT permitted!)",
             (currentUser) =>
             {
                 foreach (string msg in currentUser.Value.messages)
@@ -116,11 +116,10 @@ public class Day2Rules : IRuleset
         );
 
         validator.AddCondition(
-            "6. NO links in user bios!",
+            "6. NO links in user bios or chat!",
             (currentUser) =>
             {
                 bool rule6bio = !validator.stringContains(currentUser.Value.bio, @"http?://");
-                //Debug.Log("!Bio link, http: " + rule6bio);
                 return rule6bio;
             }
         );
@@ -140,7 +139,7 @@ public class Day3Rules : IRuleset
     public void AddRules(Validator validator)
     {
         validator.AddCondition(
-            "1. NO discussion or mention of cats or cat-related references in any semblance!",
+            "1. NO discussion or mention of cats or cat-related references in chat AND/OR in user profiles!",
             (currentUser) =>
             {
                 // True implies passes, false implies fails
@@ -182,7 +181,7 @@ public class Day3Rules : IRuleset
         );
 
         validator.AddCondition(
-            "4. NO more than 5 capital letters per message!",
+            "4. NO more than 5 capital letters per FULL chat log!",
             (currentUser) =>
             {
                 foreach (string msg in currentUser.Value.messages)
@@ -197,7 +196,7 @@ public class Day3Rules : IRuleset
         );
 
         validator.AddCondition(
-            "5. do NOT share personal information!",
+            "5. do NOT share personal information! (e.g. addresses, locations or ages NOT permitted!)",
             (currentUser) =>
             {
                 foreach (string msg in currentUser.Value.messages)
@@ -250,7 +249,14 @@ public class Day3Rules : IRuleset
                 chars.UnionWith(currentUser.Value.bio);
                 chars.UnionWith(currentUser.Value.appeal_message);
 
-                return !(chars.Count <= 4 && chars.Contains('0') && chars.Contains('1'));
+                Debug.Log($"{chars.Count} {string.Join(", ", chars)}");
+
+                return !(
+                    chars.Count <= 5
+                    && chars.Contains('.')
+                    && chars.Contains('-')
+                    && chars.Contains('/')
+                );
             }
         );
 
