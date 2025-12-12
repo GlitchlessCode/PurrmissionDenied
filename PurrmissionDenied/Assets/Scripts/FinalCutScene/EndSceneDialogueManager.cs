@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // One line of end-scene dialogue, loaded from JSON
@@ -39,6 +40,8 @@ public class EndSceneDialogueManager : Subscriber
     public Button nextButton;
     public Image characterImage; // character portrait image
     public Animator credits;
+    public Button playAgain;
+    public Animator powerOffPanel;
 
     [Header("Character Sprites")]
     public Sprite[] characterSprites; // indices used by spriteIndex
@@ -96,6 +99,8 @@ public class EndSceneDialogueManager : Subscriber
     public string fadeTriggerName = "FadeFromBlack"; // Trigger on the Animator
     public string fadeStateName = "FadeFromBlack"; // State/clip name to time
     public float fallbackFadeDuration = 0.25f; // Used if timing lookup fails
+
+    private bool isTransitioning = false;
 
     // ---------------- Subscriber setup ----------------
 
@@ -205,12 +210,26 @@ public class EndSceneDialogueManager : Subscriber
 
     void Update()
     {
-        if (canUpdate && currentLineIndex < orderedLines.Count)
+        if (canUpdate)
         {
             if (Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
             {
-                OnNextClicked();
+                if (currentLineIndex < orderedLines.Count)
+                {
+                    OnNextClicked();
+                }
+                else
+                {
+                    StartCoroutine(SimulateButtonPress(playAgain));
+                }
                 StartCoroutine(DelayAction(0.5f));
+            }
+        }
+        else if (!hasPressedPlay)
+        {
+            if (Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
+            {
+                StartCoroutine(SimulateButtonPress(playButton));
             }
         }
     }
@@ -255,6 +274,9 @@ public class EndSceneDialogueManager : Subscriber
                 StartCoroutine(FadeTextBox(1f, 0f, 0.5f));
             if (credits != null)
                 credits.SetTrigger("FadeIn");
+            if (playAgain != null)
+                playAgain.onClick.AddListener(PlayAgain);
+            currentLineIndex++;
             return;
         }
 
@@ -269,6 +291,19 @@ public class EndSceneDialogueManager : Subscriber
         // Kick off the robust, timed sequence for this line
         var line = orderedLines[currentLineIndex];
         StartCoroutine(ShowLineWithOptionalFade(line));
+    }
+
+    private void PlayAgain()
+    {
+        if (!isTransitioning)
+        {
+            if (powerOffPanel != null)
+            {
+                powerOffPanel.gameObject.SetActive(true);
+                powerOffPanel.SetTrigger("PlayPowerOff");
+            }
+            isTransitioning = true;
+        }
     }
 
     // ADD this helper coroutine (works with your existing fields/methods)
@@ -474,5 +509,34 @@ public class EndSceneDialogueManager : Subscriber
             }
         }
         return fallback;
+    }
+
+    private IEnumerator SimulateButtonPress(Button btn)
+    {
+        if (btn == null)
+            yield break;
+
+        // Ensure there’s an EventSystem (if the scene doesn’t already have one)
+        if (EventSystem.current == null)
+        {
+            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        }
+
+        // Create a fake pointer event to simulate a mouse click
+        var ped = new PointerEventData(EventSystem.current)
+        {
+            button = PointerEventData.InputButton.Left,
+            clickCount = 1,
+        };
+
+        // Trigger the button's "pressed" visual state
+        ExecuteEvents.Execute(btn.gameObject, ped, ExecuteEvents.pointerDownHandler);
+
+        // Wait briefly so the pressed sprite is visible
+        yield return new WaitForSeconds(0.1f);
+
+        // Release and invoke the click
+        ExecuteEvents.Execute(btn.gameObject, ped, ExecuteEvents.pointerUpHandler);
+        btn.onClick.Invoke();
     }
 }
