@@ -10,6 +10,7 @@ public struct EndSceneLine
 {
     public string message;
     public int spriteIndex; // -1 if no sprite change on this line
+    public bool fadeFromBlack;
 }
 
 public class EndSceneDialogueManager : Subscriber
@@ -85,6 +86,17 @@ public class EndSceneDialogueManager : Subscriber
     private bool canUpdate = false;
     private bool textBoxVisible = false;
 
+    public Button playButton; // NEW: Hook up your Play button here in the Inspector
+    public float playAnimationDelay = 0.3f; // NEW: How long to wait for the Play button fade anim
+
+    private bool linesLoaded = false; // NEW: JSON data is ready
+    private bool hasPressedPlay = false; // NEW: Prevent double-start
+
+    public Animator fadeAnimator; // Drag the fade image’s Animator here
+    public string fadeTriggerName = "FadeFromBlack"; // Trigger on the Animator
+    public string fadeStateName = "FadeFromBlack"; // State/clip name to time
+    public float fallbackFadeDuration = 0.25f; // Used if timing lookup fails
+
     // ---------------- Subscriber setup ----------------
 
     public override void Subscribe()
@@ -106,6 +118,12 @@ public class EndSceneDialogueManager : Subscriber
         {
             nextButton.onClick.AddListener(OnNextClicked);
             nextButton.interactable = false; // we enable this once lines are loaded
+        }
+
+        if (playButton != null)
+        {
+            playButton.onClick.AddListener(OnPlayClicked); // NEW
+            nextButton.interactable = false; // NEW
         }
 
         // NEW: Set starting background and play PowerOn after a short delay
@@ -149,7 +167,7 @@ public class EndSceneDialogueManager : Subscriber
     private void OnAsyncComplete()
     {
         if (hasRequestedLoad)
-            return; // avoid double-start if event emitted twice
+            return;
         hasRequestedLoad = true;
 
         // Preserve the order specified in dialogueFiles
@@ -171,14 +189,18 @@ public class EndSceneDialogueManager : Subscriber
             return;
         }
 
-        if (nextButton != null)
-        {
-            nextButton.interactable = true;
-            canUpdate = true;
-        }
+        linesLoaded = true; // NEW
+        canUpdate = false; // NEW: wait for Play
+        currentLineIndex = -1; // keep reset
 
-        currentLineIndex = -1;
-        ShowNextLine();
+        // if (nextButton != null)
+        // {
+        //     nextButton.interactable = true;
+        //     canUpdate = true;
+        // }
+
+        // currentLineIndex = -1;
+        // ShowNextLine();
     }
 
     void Update()
@@ -220,39 +242,61 @@ public class EndSceneDialogueManager : Subscriber
         ShowNextLine();
     }
 
+    // REPLACE your ShowNextLine() with this:
     private void ShowNextLine()
     {
-        currentLineIndex++;
-
-        // No more lines: fade out textbox and disable button
-        if (currentLineIndex >= lines.Count)
+        // Bounds check should use orderedLines.Count (not lines.Count)
+        if (currentLineIndex + 1 >= orderedLines.Count)
         {
+            // No more lines: fade out textbox and disable button
             if (nextButton != null)
                 nextButton.interactable = false;
-
             if (textBoxGroup != null)
                 StartCoroutine(FadeTextBox(1f, 0f, 0.5f));
-
-            credits.SetTrigger("FadeIn");
+            if (credits != null)
+                credits.SetTrigger("FadeIn");
             return;
         }
 
-        // --------- NEW: Check if it's time to swap the background ---------
+        currentLineIndex++;
+
+        // One-shot background swap (kept as-is)
         if (!hasSwappedBackground && currentLineIndex >= backgroundSwapLineIndex)
         {
             SwapBackgroundOnce();
         }
-        // -------------------------------------------------------------------
 
-        // Ensure textbox visible
+        // Kick off the robust, timed sequence for this line
+        var line = orderedLines[currentLineIndex];
+        StartCoroutine(ShowLineWithOptionalFade(line));
+    }
+
+    // ADD this helper coroutine (works with your existing fields/methods)
+    private IEnumerator ShowLineWithOptionalFade(EndSceneLine line)
+    {
+        // Lock input while we transition
+        canUpdate = false;
+        if (nextButton != null)
+            nextButton.interactable = false;
+
+        // Ensure textbox is visible before we type (and wait for the fade to finish)
         if (!textBoxVisible && textBoxGroup != null)
+            yield return StartCoroutine(FadeTextBox(0f, 1f, 0.5f));
+
+        // Optional: quick fade-from-black before this specific line
+        if (line.fadeFromBlack && fadeAnimator != null)
         {
-            StartCoroutine(FadeTextBox(0f, 1f, 0.5f));
+            // Play the fade clip safely from the start
+            fadeAnimator.ResetTrigger(fadeTriggerName);
+            fadeAnimator.Play(fadeStateName, 0, 0f);
+            fadeAnimator.SetTrigger(fadeTriggerName);
+
+            // Wait for the actual clip length (fallback if lookup fails)
+            float dur = GetClipLength(fadeAnimator, fadeStateName, fallbackFadeDuration);
+            yield return new WaitForSeconds(dur);
         }
 
-        EndSceneLine line = orderedLines[currentLineIndex];
-
-        // Handle sprite change
+        // Apply sprite change (kept from your code)
         if (
             characterImage != null
             && characterSprites != null
@@ -263,14 +307,18 @@ public class EndSceneDialogueManager : Subscriber
             characterImage.sprite = characterSprites[line.spriteIndex];
         }
 
-        // Start typing animation
+        // Start typing (stop any prior typing first)
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
-
+        dialogueText.text = string.Empty;
         typingCoroutine = StartCoroutine(TypeLine(line.message));
+
+        // Re-enable advancing AFTER we kick off typing (or when typing completes if you gate it there)
+        if (nextButton != null)
+            nextButton.interactable = true;
+        canUpdate = true;
     }
 
-    // NEW: Background swap logic (only runs once)
     private void SwapBackgroundOnce()
     {
         if (backgroundImage != null && swappedBackgroundSprite != null)
@@ -364,5 +412,67 @@ public class EndSceneDialogueManager : Subscriber
         canUpdate = false;
         yield return new WaitForSeconds(time);
         canUpdate = true;
+    }
+
+    //---------------------- Next Button --------------------
+    private void OnPlayClicked() // NEW
+    {
+        if (!linesLoaded || hasPressedPlay)
+            return;
+        hasPressedPlay = true;
+
+        // Optional: hide/disable Play after click so it can’t be pressed again
+        if (playButton != null)
+        {
+            playButton.interactable = false;
+            // Optionally: playButton.gameObject.SetActive(false);
+        }
+
+        StartCoroutine(BeginDialogueAfterPlay());
+    }
+
+    private IEnumerator BeginDialogueAfterPlay() // NEW
+    {
+        // Give your Play button’s animator time to run its short fade
+        yield return new WaitForSeconds(Mathf.Max(0f, playAnimationDelay));
+
+        // Fade in the text box now
+        if (textBoxGroup != null && !textBoxVisible)
+            StartCoroutine(FadeTextBox(0f, 1f, 0.5f));
+
+        if (nextButton != null)
+            nextButton.interactable = true;
+
+        canUpdate = true; // allow Enter/Return to advance
+        currentLineIndex = -1;
+        ShowNextLine(); // finally start dialogue
+    }
+
+    //----------------Fade From Black --------------------------------
+    private void PlayFadeFromBlack()
+    {
+        if (fadeAnimator == null)
+            return;
+        // Reset and play from start to avoid re-entry issues
+        fadeAnimator.ResetTrigger(fadeTriggerName);
+        fadeAnimator.Play(fadeStateName, 0, 0f);
+        fadeAnimator.SetTrigger(fadeTriggerName);
+    }
+
+    // OPTIONAL: put this utility somewhere in your class if you don't have it yet
+    private float GetClipLength(Animator animator, string stateOrClipName, float fallback)
+    {
+        if (animator == null)
+            return fallback;
+        var ac = animator.runtimeAnimatorController;
+        if (ac != null)
+        {
+            foreach (var clip in ac.animationClips)
+            {
+                if (clip != null && clip.name == stateOrClipName)
+                    return clip.length;
+            }
+        }
+        return fallback;
     }
 }

@@ -1,4 +1,5 @@
 {
     "message": "Uhh, meow?\nHi.",
-    "spriteIndex": 0
+    "spriteIndex": 0,
+    "fadeFromBlack": true
 }
