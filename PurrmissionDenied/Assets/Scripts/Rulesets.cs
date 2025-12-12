@@ -181,7 +181,7 @@ public class Day3Rules : IRuleset
         );
 
         validator.AddCondition(
-            "4. NO more than 5 capital letters per FULL chat log!",
+            "4. NO more than 5 capital letters per MESSAGE!",
             (currentUser) =>
             {
                 foreach (string msg in currentUser.Value.messages)
