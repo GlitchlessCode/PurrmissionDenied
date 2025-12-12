@@ -87,8 +87,6 @@ public class DirectMessageManager : Subscriber
         state = FeedbackState.NoFeedback;
         appealCount = 0;
         correctAppealCount = 0;
-        asyncComplete = false;
-        isRunningQueue = false;
 
         if (!setup)
         {
