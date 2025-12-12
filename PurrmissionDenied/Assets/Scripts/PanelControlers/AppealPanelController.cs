@@ -242,18 +242,6 @@ public class AppealPanelController : Subscriber
                 StartCoroutine(DelayAction(DelayTime));
             }
         }
-        // if (SettingsPanel.activeSelf)
-        // {
-        //     AcceptButton.enabled = false;
-        //     DenyButton.enabled = false;
-        //     scrollable = false;
-        // }
-        // else
-        // {
-        //     AcceptButton.enabled = true;
-        //     DenyButton.enabled = true;
-        //     scrollable = true;
-        // }
         if (SettingsPanel.activeSelf)
         {
             AcceptButton.enabled = false;

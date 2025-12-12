@@ -1433,7 +1433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 57.655174, y: 0}
+  m_AnchoredPosition: {x: 63.050003, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.28}
 --- !u!114 &191525344
@@ -4544,7 +4544,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 118.660614, y: 0}
+  m_AnchoredPosition: {x: 123.5, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &966684228
@@ -9861,6 +9861,7 @@ MonoBehaviour:
   content: {fileID: 1120158325}
   RulesText: {fileID: 1086780059}
   SettingsPanel: {fileID: 697209356}
+  RulesPanel: {fileID: 428176971}
   Scroll:
     clip: {fileID: 8300000, guid: dcaf3f6a07d966e62bebe571ef05e51a, type: 3}
     volume: 0.6
@@ -9943,6 +9944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SettingsPanel: {fileID: 697209356}
+  DMSPanel: {fileID: 588095246}
   AudioBus: {fileID: 11400000, guid: 7aa3e6f8e7ff8143aa03f78053e4c52f, type: 2}
   DMSent: {fileID: 11400000, guid: 97ebe09952f655c42b984331ad049f6d, type: 2}
   DMTabClick: {fileID: 11400000, guid: 074e5403052471449b841afb3e4f8100, type: 2}
@@ -10458,7 +10460,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 51.382942, y: 0}
+  m_AnchoredPosition: {x: 55.850002, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.4}
 --- !u!114 &2086084006
