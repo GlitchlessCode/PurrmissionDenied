@@ -191,7 +191,7 @@ public class ReviewPanelController : Subscriber
         }
         else
         {
-            SimulateButton(CloseButton, KeyCode.Return, KeyCode.KeypadEnter);
+            SimulateButton(CloseButton, KeyCode.R);
             SimulateButton(NextButton, KeyCode.RightArrow, KeyCode.D);
             SimulateButton(PrevButton, KeyCode.LeftArrow, KeyCode.A);
 
