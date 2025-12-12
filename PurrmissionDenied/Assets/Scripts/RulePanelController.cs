@@ -10,6 +10,7 @@ public class RulePanelController : Subscriber
 
     [Header("UI")]
     public Text RulesText;
+    public GameObject SettingsPanel;
 
     [Header("Audio")]
     public Audio Scroll;
@@ -35,6 +36,15 @@ public class RulePanelController : Subscriber
 
     public void Update()
     {
+        if (SettingsPanel.activeSelf)
+        {
+            scrollable = false;
+        }
+        else
+        {
+            scrollable = true;
+        }
+
         if ((Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) && scrollable)
         {
             content.anchoredPosition -= new Vector2(0, scrollSpeed);

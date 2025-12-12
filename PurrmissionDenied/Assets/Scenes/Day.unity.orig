@@ -1785,7 +1785,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'call me THEMOUSER... and catch me live DAILY at scritch.tv/themouser :3
 
-    business: themouser@mousermedia.com
+    business:
+    themouser@mousermedia.com
 
     paws UP! ^w^'
 --- !u!222 &213693905
@@ -5176,7 +5177,11 @@ MonoBehaviour:
   DayInit: {fileID: 11400000, guid: 9eae0ffb72c123fafb163a013cfeeaa3, type: 2}
   IncrementAndMove: {fileID: 11400000, guid: b718f5e84ba3778568aca0c251eb3c80, type: 2}
   EnableOverride: 0
+<<<<<<< HEAD
   IndexOverride: 0
+=======
+  IndexOverride: 2
+>>>>>>> main
 --- !u!4 &1095382514
 Transform:
   m_ObjectHideFlags: 0
