@@ -59,6 +59,7 @@ public class EndSceneDialogueManager : Subscriber
     [Header("Audio Clips")]
     public Audio TypingSfx; // small bleep for typing
     public Audio NextLineSfx; // optional click when moving to next line
+    public Audio PowerOffSfx;
 
     // --------- NEW: Background swapping stuff ---------
     [Header("Background Swap")]
@@ -141,6 +142,9 @@ public class EndSceneDialogueManager : Subscriber
         {
             StartCoroutine(PowerOnDelayed());
         }
+
+        if (playAgain)
+            playAgain.gameObject.SetActive(false);
 
         // Start loading our end-scene JSON via the existing async importer
         StartCoroutine(
@@ -275,7 +279,10 @@ public class EndSceneDialogueManager : Subscriber
             if (credits != null)
                 credits.SetTrigger("FadeIn");
             if (playAgain != null)
+            {
+                playAgain.gameObject.SetActive(true);
                 playAgain.onClick.AddListener(PlayAgain);
+            }
             currentLineIndex++;
             return;
         }
@@ -301,6 +308,10 @@ public class EndSceneDialogueManager : Subscriber
             {
                 powerOffPanel.gameObject.SetActive(true);
                 powerOffPanel.SetTrigger("PlayPowerOff");
+                if (PowerOffSfx.clip != null)
+                {
+                    SfxBus?.Emit(PowerOffSfx);
+                }
             }
             isTransitioning = true;
         }

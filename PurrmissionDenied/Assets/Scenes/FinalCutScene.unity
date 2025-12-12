@@ -1753,6 +1753,14 @@ MonoBehaviour:
     pitchOverride:
       active: 0
       value: 0
+  PowerOffSfx:
+    clip: {fileID: 8300000, guid: 1c28e542158fa84f3af15c4d4aed2ec0, type: 3}
+    volume: 0.6
+    pitchVariance: 0
+    loop: 0
+    pitchOverride:
+      active: 0
+      value: 0
   backgroundImage: {fileID: 60342814}
   startBackgroundSprite: {fileID: 21300000, guid: 73b33d3e4b62f464199d353cca9ef786,
     type: 3}
