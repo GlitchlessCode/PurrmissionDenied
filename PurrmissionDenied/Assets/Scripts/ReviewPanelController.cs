@@ -22,6 +22,7 @@ public class ReviewPanelController : Subscriber
     public Animator StreakImage;
     public Text PointText;
     public Image AvatarImage;
+    public Text NameText;
     public Text BioText;
     public RectTransform UserMessages;
     public Text AppealText;
@@ -104,6 +105,7 @@ public class ReviewPanelController : Subscriber
         PrevButton.interactable = record.Index != 0;
         NextButton.interactable = record.Index != recordCount - 1;
 
+        NameText.text = record.User.name;
         BioText.text = record.User.bio;
 
         if (Avatars != null)
