@@ -88,14 +88,12 @@ public class AppealPanelController : Subscriber
     {
         if (isActive && !SettingsPanel.activeSelf)
         {
-            Debug.Log("Appeal active");
             AcceptButton.gameObject.SetActive(true);
             DenyButton.gameObject.SetActive(true);
             scrollable = true;
         }
         else
         {
-            Debug.Log("Appeal not active");
             AcceptButton.gameObject.SetActive(false);
             DenyButton.gameObject.SetActive(false);
             scrollable = false;
