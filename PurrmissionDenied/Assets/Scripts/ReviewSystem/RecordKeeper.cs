@@ -193,25 +193,15 @@ public class RecordKeeper : Subscriber
             records.Add(record);
         }
 
-        foreach (AppealRecord record in records)
-        {
-            Debug.Log(
-                $"{record.Index}: {record.User.name} - Chose {record.Choice} - Was Correct? {record.Correct} - Any Mistake? {record.MistakesText} - Earned {record.Score} with a streak of {record.Streak}"
-            );
-        }
-
         solid = true;
-        Debug.Log($"Solidified with {records.Count} records");
         RecordsSolidified?.Emit(new Solidified(records.Count, ruleText));
         Reset();
     }
 
     private void OnRequestRecord(int recordIdx)
     {
-        Debug.Log("Got request");
         if ((!solid) || (recordIdx >= records.Count))
             return;
-        Debug.Log($"Found {recordIdx}");
 
         FoundRecord?.Emit(records[recordIdx]);
     }
