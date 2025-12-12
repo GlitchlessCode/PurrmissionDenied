@@ -59,6 +59,7 @@ public class EndSceneDialogueManager : Subscriber
     [Header("Audio Clips")]
     public Audio TypingSfx; // small bleep for typing
     public Audio NextLineSfx; // optional click when moving to next line
+    public Audio PowerOffSfx;
 
     // --------- NEW: Background swapping stuff ---------
     [Header("Background Swap")]
@@ -301,6 +302,10 @@ public class EndSceneDialogueManager : Subscriber
             {
                 powerOffPanel.gameObject.SetActive(true);
                 powerOffPanel.SetTrigger("PlayPowerOff");
+                if (PowerOffSfx.clip != null)
+                {
+                    SfxBus?.Emit(PowerOffSfx);
+                }
             }
             isTransitioning = true;
         }
