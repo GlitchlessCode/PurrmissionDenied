@@ -249,8 +249,6 @@ public class Day3Rules : IRuleset
                 chars.UnionWith(currentUser.Value.bio);
                 chars.UnionWith(currentUser.Value.appeal_message);
 
-                Debug.Log($"{chars.Count} {string.Join(", ", chars)}");
-
                 return !(
                     chars.Count <= 5
                     && chars.Contains('.')
