@@ -192,8 +192,8 @@ public class ReviewPanelController : Subscriber
         else
         {
             SimulateButton(CloseButton, KeyCode.Return, KeyCode.KeypadEnter);
-            SimulateButton(NextButton, KeyCode.RightArrow);
-            SimulateButton(PrevButton, KeyCode.LeftArrow);
+            SimulateButton(NextButton, KeyCode.RightArrow, KeyCode.D);
+            SimulateButton(PrevButton, KeyCode.LeftArrow, KeyCode.A);
 
             SimulateScrolling(RulesScrollView, KeyCode.W, KeyCode.S);
             SimulateScrolling(AppealScrollView, KeyCode.UpArrow, KeyCode.DownArrow);
