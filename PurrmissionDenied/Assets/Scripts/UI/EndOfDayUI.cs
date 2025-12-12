@@ -128,7 +128,7 @@ public class EndOfDayUI : Subscriber
         yield return TallyValue(appealsText, summary.correctAppeals, 1, summary.completedAppeals);
         yield return new WaitForSeconds(1.0f);
         if (quotaTextTitle)
-            quotaTextTitle.text = "SCORE/QUOTA:";
+            quotaTextTitle.text = "SCORE / QUOTA:";
         if (PlaceAudio.clip != null)
         {
             AudioBus?.Emit(PlaceAudio);

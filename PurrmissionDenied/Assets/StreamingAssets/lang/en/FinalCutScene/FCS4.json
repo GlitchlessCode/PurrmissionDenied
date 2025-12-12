@@ -1,4 +1,5 @@
 {
-    "message": "And I think an explanation is in order...\nSo, uh, I know you've all been waiting for the face reveal...",
-    "spriteIndex": 5
+  "message": "And I think an explanation is in order...\nSo, uh, I know you've all been waiting for the face reveal...",
+  "spriteIndex": 5,
+  "fadeFromBlack": false
 }

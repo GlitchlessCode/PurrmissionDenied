@@ -1785,8 +1785,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'call me THEMOUSER... and catch me live DAILY at scritch.tv/themouser :3
 
-    business:
-    themouser@mousermedia.com
+    business: themouser@mousermedia.com
 
     paws UP! ^w^'
 --- !u!222 &213693905
