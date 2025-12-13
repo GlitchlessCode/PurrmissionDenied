@@ -8,6 +8,7 @@ public class DMSPanelController : Subscriber
 {
     [Header("UI")]
     public GameObject SettingsPanel;
+    public GameObject DMSPanel;
 
     [Header("Events")]
     public AudioGameEvent AudioBus;
@@ -100,7 +101,7 @@ public class DMSPanelController : Subscriber
         {
             scrollable = false;
         }
-        else
+        else if (DMSPanel.activeSelf)
         {
             scrollable = true;
         }

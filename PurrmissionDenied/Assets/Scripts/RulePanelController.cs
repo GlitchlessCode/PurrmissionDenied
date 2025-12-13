@@ -11,6 +11,7 @@ public class RulePanelController : Subscriber
     [Header("UI")]
     public Text RulesText;
     public GameObject SettingsPanel;
+    public GameObject RulesPanel;
 
     [Header("Audio")]
     public Audio Scroll;
@@ -40,19 +41,10 @@ public class RulePanelController : Subscriber
         {
             scrollable = false;
         }
-        else
+        else if (RulesPanel.activeSelf)
         {
             scrollable = true;
         }
-
-        // if (SettingsPanel.activeSelf)
-        // {
-        //     scrollable = false;
-        // }
-        // else if (RulePanel.activeSelf)
-        // {
-        //     scrollable = true;
-        // }
 
         if ((Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) && scrollable)
         {
