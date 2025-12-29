@@ -156,7 +156,7 @@ public class UserManager : Subscriber
                 {
                     if (user.Value.image_index == 39)
                     {
-                        Mistake?.Emit("Rule Number(s) Broken: 1,9");
+                        Mistake?.Emit("Rules Broken: #1,9");
                     }
                     else
                     {
