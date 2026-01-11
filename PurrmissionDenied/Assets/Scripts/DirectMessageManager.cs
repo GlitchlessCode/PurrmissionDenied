@@ -87,6 +87,8 @@ public class DirectMessageManager : Subscriber
         state = FeedbackState.NoFeedback;
         appealCount = 0;
         correctAppealCount = 0;
+        asyncComplete = false;
+        isRunningQueue = false;
 
         if (!setup)
         {
@@ -101,7 +103,6 @@ public class DirectMessageManager : Subscriber
                 DontDestroyOnLoad(gameObject);
 
                 AfterAppeal?.Subscribe(OnAfterAppealQueued);
-                AsyncComplete?.Subscribe(OnAsyncComplete);
 
                 queuedAppeals = new Queue<bool>();
                 StartCoroutine(
@@ -174,6 +175,7 @@ public class DirectMessageManager : Subscriber
             AfterAppeal?.Subscribe(OnAfterAppeal);
         }
 
+        AsyncComplete?.Subscribe(OnAsyncComplete);
         queuedSequences = new Dictionary<Guid, int>();
         messageSequences = new List<InternalDirectMessageSequence>();
         foreach (CoupledEventSequence coupled in MessageSequences)
